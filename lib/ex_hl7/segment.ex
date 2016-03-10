@@ -443,6 +443,26 @@ defmodule HL7.Segment.RF1 do
   end
 end
 
+defmodule HL7.Segment.TXA do
+  @moduledoc "9.6.1 TXA - Transcription Document Header Segment"
+  alias HL7.Composite.EI
+  alias HL7.Composite.XCN
+
+  segment "TXA" do
+    field :set_id,                       seq:  1, type: :integer,  length: 4
+    field :document_type,                seq:  2, type: :string,   length: 30
+    field :document_presentation,        seq:  3, type: :string,   length: 2
+    field :activity_data_time,           seq:  4, type: :datetime, length: 26
+    field :transcription_datetime,       seq:  5, type: XCN,       length: 250
+    field :document_number,              seq: 12, type: EI,        length: 30
+    field :placer_order_number,          seq: 14, type: EI,        length: 22
+    field :document_filename,            seq: 16, type: :string,   length: 30
+    field :completion_status,            seq: 17, type: :string,   length: 2
+    field :confidentialty_status,        seq: 18, type: :string,   length: 2
+    field :availability_status,          seq: 19, type: :string,   length: 2
+  end
+end
+
 # Custom segments
 defmodule HL7.Segment.ZAU do
   @moduledoc "Procedure authorization information"
