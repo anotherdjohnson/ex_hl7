@@ -137,6 +137,7 @@ end
 defmodule HL7.Segment.EVN do
   @moduledoc "3.4.1 EVN - event type segment"
   segment "EVN" do
+    field :event_type_code,            seq:  1, type: :string,   length:  3
     field :recorded_datetime,          seq:  2, type: :datetime, length: 14
     field :planned_event_datetime,     seq:  3, type: :datetime, length: 14
     field :event_reason_code,          seq:  4, type: :string,   length:  3
@@ -314,6 +315,8 @@ defmodule HL7.Segment.PID do
     field :patient_id,                 seq:  3, type: CX,        length: 48
     field :alt_patient_id,             seq:  4, type: CX,        length: 48
     field :patient_name,               seq:  5, type: XPN,       length: 51
+    field :date_of_birth,              seq:  7, type: :datetime, length: 26
+    field :sex,                        seq:  8, type: :string,   length: 1
   end
 end
 
@@ -350,28 +353,30 @@ end
 
 defmodule HL7.Segment.PV1 do
   @moduledoc "3.4.3 PV1 - patient visit segment"
+  alias HL7.Composite.CX
   alias HL7.Composite.PL
   alias HL7.Composite.XCN
 
   segment "PV1" do
-    field :set_id,                     seq:  1, type: :integer,  length:  4
-    field :patient_class,              seq:  2, type: :string,   length:  1
-    field :assigned_patient_location,  seq:  3, type: PL,        length: 32
-    field :admission_type,             seq:  4, type: :string,   length: 34
-    field :attending_doctor,           seq:  7, type: XCN,       length: 94
-    field :referring_doctor,           seq:  8, type: XCN,       length: 94
-    field :hospital_service,           seq: 10, type: :string,   length: 99
-    field :readmission_indicator,      seq: 13, type: :string,   length:  2
-    field :bad_debt_transfer_amount,   seq: 32, type: :float,    length: 12
-    field :bad_debt_recovery_amount,   seq: 33, type: :float,    length: 12
-    field :discharge_diposition,       seq: 36, type: :string,   length:  3
-    field :admit_datetime,             seq: 44, type: :datetime, length: 12
-    field :discharge_datetime,         seq: 45, type: :datetime, length: 12
-    field :current_patient_balance,    seq: 46, type: :float,    length: 12
-    field :total_charges,              seq: 47, type: :float,    length: 12
-    field :total_adjustments,          seq: 48, type: :float,    length: 12
-    field :total_payments,             seq: 49, type: :float,    length: 12
-    field :visit_indicator,            seq: 51, type: :string,   length:  1
+    field :set_id,                     seq:  1, type: :integer,  length:   4
+    field :patient_class,              seq:  2, type: :string,   length:   1
+    field :assigned_patient_location,  seq:  3, type: PL,        length:  32
+    field :admission_type,             seq:  4, type: :string,   length:  34
+    field :attending_doctor,           seq:  7, type: XCN,       length:  94
+    field :referring_doctor,           seq:  8, type: XCN,       length:  94
+    field :hospital_service,           seq: 10, type: :string,   length:  99
+    field :readmission_indicator,      seq: 13, type: :string,   length:   2
+    field :visit_number,               seq: 19, type: CX,        length: 250
+    field :bad_debt_transfer_amount,   seq: 32, type: :float,    length:  12
+    field :bad_debt_recovery_amount,   seq: 33, type: :float,    length:  12
+    field :discharge_diposition,       seq: 36, type: :string,   length:   3
+    field :admit_datetime,             seq: 44, type: :datetime, length:  12
+    field :discharge_datetime,         seq: 45, type: :datetime, length:  12
+    field :current_patient_balance,    seq: 46, type: :float,    length:  12
+    field :total_charges,              seq: 47, type: :float,    length:  12
+    field :total_adjustments,          seq: 48, type: :float,    length:  12
+    field :total_payments,             seq: 49, type: :float,    length:  12
+    field :visit_indicator,            seq: 51, type: :string,   length:   1
   end
 end
 
@@ -449,17 +454,18 @@ defmodule HL7.Segment.TXA do
   alias HL7.Composite.XCN
 
   segment "TXA" do
-    field :set_id,                       seq:  1, type: :integer,  length: 4
-    field :document_type,                seq:  2, type: :string,   length: 30
-    field :document_presentation,        seq:  3, type: :string,   length: 2
-    field :activity_data_time,           seq:  4, type: :datetime, length: 26
-    field :transcription_datetime,       seq:  5, type: XCN,       length: 250
-    field :document_number,              seq: 12, type: EI,        length: 30
-    field :placer_order_number,          seq: 14, type: EI,        length: 22
-    field :document_filename,            seq: 16, type: :string,   length: 30
-    field :completion_status,            seq: 17, type: :string,   length: 2
-    field :confidentialty_status,        seq: 18, type: :string,   length: 2
-    field :availability_status,          seq: 19, type: :string,   length: 2
+    field :set_id,                         seq:  1, type: :integer,  length: 4
+    field :document_type,                  seq:  2, type: :string,   length: 30
+    field :document_presentation,          seq:  3, type: :string,   length: 2
+    field :activity_data_time,             seq:  4, type: :datetime, length: 26
+    field :primary_provider_activity_code, seq:  5, type: XCN,       length: 250
+    field :transcription_datetime,         seq:  7, type: :datetime, length: 26
+    field :document_number,                seq: 12, type: EI,        length: 30
+    field :placer_order_number,            seq: 14, type: EI,        length: 22
+    field :document_filename,              seq: 16, type: :string,   length: 30
+    field :completion_status,              seq: 17, type: :string,   length: 2
+    field :confidentialty_status,          seq: 18, type: :string,   length: 2
+    field :availability_status,            seq: 19, type: :string,   length: 2
   end
 end
 
