@@ -70,6 +70,91 @@ end
 
 use HL7.Segment.Def
 
+
+defmodule HL7.Segment.AIG do
+  @moduledoc "10.6.5 AIG - Appointment Information - General Resource Segment"
+  alias HL7.Composite.CE
+
+  segment "AIG" do
+    field :set_id,                    seq:  1, type: :string,   length:   4
+    field :segment_action_code,       seq:  2, type: :string,   length:   3
+    field :resource_id,               seq:  3, type: CE,        length: 250
+    field :resource_type,             seq:  4, type: CE,        length: 250
+    field :resource_group,            seq:  5, type: CE,        length: 250
+    field :resource_quantity,         seq:  6, type: :integer,  length:   5
+    field :resource_quantity_units,   seq:  7, type: CE,        length: 250
+    field :start_date_time,           seq:  8, type: :datetime, length:  26
+    field :start_time_offset,         seq:  9, type: :integer,  length:  20
+    field :start_time_offset_units,   seq: 10, type: CE,        length: 250
+    field :duration,                  seq: 11, type: :integer,  length:  20
+    field :duration_units,            seq: 12, type: CE,        length: 250
+    field :allow_substitution_code,   seq: 13, type: :string,   length:  10
+    field :filler_status_code,        seq: 14, type: CE,        length: 250
+  end
+end
+
+defmodule HL7.Segment.AIL do
+  @moduledoc "10.6.6 AIL - Appointment Information - Location Resource Segment"
+  alias HL7.Composite.CE
+  alias HL7.Composite.PL
+  
+  segment "AIL" do
+    field :set_id,                      seq:  1, type: :integer,  length:   4
+    field :segment_action_code,         seq:  2, type: :string,   length:   3
+    field :location_resource_id,        seq:  3, type: PL,        length:  80
+    field :location_type,               seq:  4, type: CE,        length: 250
+    field :location_group,              seq:  5, type: CE,        length: 250
+    field :start_date_time,             seq:  6, type: :datetime, length:  26
+    field :start_time_offset,           seq:  7, type: :integer,  length:  20
+    field :start_time_offset_units,     seq:  8, type: CE,        length: 250
+    field :duration,                    seq:  9, type: :integer,  length:  20
+    field :duration_units,              seq: 10, type: CE,        length: 250
+    field :allow_substitution_code,     seq: 11, type: :string,   length:  10
+    field :filler_status_code,          seq: 12, type: CE,        length: 250
+  end
+end
+
+defmodule HL7.Segment.AIP do
+  @moduledoc "Appointment Information - Personnel Resource Segment"
+  alias HL7.Composite.CE
+  alias HL7.Composite.XCN
+
+  segment "AIP" do
+    field :set_id,                      seq:  1, type: :integer,  length:   4
+    field :segment_action_code,         seq:  2, type: :string,   length:   3
+    field :personnel_resource_id,       seq:  3, type: XCN,       length: 250
+    field :resource_type,               seq:  4, type: CE,        length: 250
+    field :resource_group,              seq:  5, type: CE,        length: 250
+    field :start_date_time,             seq:  6, type: :datetime, length:  26
+    field :start_time_offset,           seq:  7, type: :integer,  length:  20
+    field :start_time_offset_units,     seq:  8, type: CE,        length: 250
+    field :duration,                    seq:  9, type: :integer,  length:  20
+    field :duration_units,              seq: 10, type: CE,        length: 250
+    field :allow_substitution_code,     seq: 11, type: :string,   length:  10
+    field :filler_status_code,          seq: 12, type: CE,        length: 250
+  end  
+end
+
+defmodule HL7.Segment.AIS do
+  @moduledoc "10.6.4 AIS - Appointment Information - Service Segment"
+  alias HL7.Composite.CE
+
+  segment "AIS" do
+    field :set_id,                      seq:  1, type: :integer,  length:   4
+    field :segment_action_code,         seq:  2, type: :string,   length:   3
+    field :universal_service,           seq:  3, type: CE,        length: 250
+    field :start_date_time,             seq:  4, type: :datetime, length:  26
+    field :start_time_offset,           seq:  5, type: :integer,  length:  20
+    field :start_time_offset_units,     seq:  6, type: CE,        length: 250
+    field :duration,                    seq:  7, type: :integer,  length:  20
+    field :duration_units,              seq:  8, type: CE,        length: 250
+    field :allow_substitution_code,     seq:  9, type: :string,   length:  10
+    field :filler_status_code,          seq: 10, type: CE,        length: 250
+    field :placer_supplemental_service, seq: 11, type: CE,        length: 250
+    field :filler_supplemental_service, seq: 12, type: CE,        length: 250
+  end
+end
+
 defmodule HL7.Segment.AUT do
   @moduledoc "11.6.2 AUT - authorization information segment"
   alias HL7.Composite.CE
@@ -307,16 +392,27 @@ end
 
 defmodule HL7.Segment.PID do
   @moduledoc "3.4.2 PID - patient identification segment"
+  alias HL7.Composite.CE
   alias HL7.Composite.CX
+  alias HL7.Composite.XAD
   alias HL7.Composite.XPN
+  alias HL7.Composite.XTN
 
   segment "PID" do
-    field :set_id,                     seq:  1, type: :integer,  length:  4
-    field :patient_id,                 seq:  3, type: CX,        length: 48
-    field :alt_patient_id,             seq:  4, type: CX,        length: 48
-    field :patient_name,               seq:  5, type: XPN,       length: 51
-    field :date_of_birth,              seq:  7, type: :datetime, length: 26
-    field :sex,                        seq:  8, type: :string,   length: 1
+    field :set_id,                     seq:  1, type: :integer,  length:   4
+    field :patient_id,                 seq:  3, type: CX,        length:  48
+    field :alt_patient_id,             seq:  4, type: CX,        length:  48
+    field :patient_name,               seq:  5, type: XPN,       length:  51
+    field :date_of_birth,              seq:  7, type: :datetime, length:  26
+    field :sex,                        seq:  8, type: :string,   length:   1
+    field :patient_alias,              seq:  9, type: XPN,       length: 250
+    field :race,                       seq: 10, type: CE,        length: 250
+    field :patient_address,            seq: 11, type: XAD,       length: 250
+    field :county_code,                seq: 12, type: :string,   length:   4
+    field :phone_number_home,          seq: 13, type: XTN,       length: 250
+    field :phone_number_business,      seq: 14, type: XTN,       length: 250
+    field :primary_language,           seq: 15, type: CE,        length: 250
+    field :patient_death_indicator,    seq: 30, type: :string,   length:   1
   end
 end
 
@@ -445,6 +541,47 @@ defmodule HL7.Segment.RF1 do
     field :expiration_datetime,        seq:  8, type: :datetime, length: 12
     field :process_datetime,           seq:  9, type: :datetime, length: 12
     field :referral_reason,            seq: 10, type: CE,        length: 21
+  end
+end
+
+defmodule HL7.Segment.RGS do
+  @moduledoc "10.6.3 RGS - Resource Group Segment"
+  alias HL7.Composite.CE
+
+  segment "RGS" do
+    field :set_id,                     seq: 1, type: :integer, length:   4
+    field :segment_action_code,        seq: 2, type: :string,  length:   3
+    field :resource_group_id,          seq: 3, type: CE,       length: 250
+  end
+end
+
+defmodule HL7.Segment.SCH do
+  @moduledoc "10.6.2 SCH - Schedule Activity Information Segment"
+  alias HL7.Composite.CE
+  alias HL7.Composite.EI
+  alias HL7.Composite.TQ
+  alias HL7.Composite.XCN
+  alias HL7.Composite.XTN
+
+  segment "SCH" do
+    field :placer_appointment_id,       seq:  1, type: EI,       length:  75
+    field :filler_appointment_id,       seq:  2, type: EI,       length:  75
+    field :occurrence_number,           seq:  3, type: :integer, length:  16
+    field :placer_group,                seq:  4, type: EI,       length:  22
+    field :schedule_id,                 seq:  5, type: CE,       length: 250
+    field :event_reason,                seq:  6, type: CE,       length: 250
+    field :appointment_reason,          seq:  7, type: CE,       length: 250
+    field :appointment_type,            seq:  8, type: CE,       length: 250
+    field :appointment_duration,        seq:  9, type: :integer, length:  20
+    field :appointment_duration_units,  seq: 10, type: CE,       length: 250
+    field :appointment_timing_quantity, seq: 11, type: TQ,       length: 200
+    field :placer_contact_person,       seq: 12, type: XCN,      length: 250
+    field :placer_contact_phone_number, seq: 13, type: XTN,      length: 250
+    field :filler_contact_phone_number, seq: 17, type: XTN,      length: 250
+    field :entered_by_phone_number,     seq: 21, type: XTN,      length: 250
+    field :filler_status_code,          seq: 25, type: CE,       length: 250
+    field :placer_order_number,         seq: 26, type: EI,       length:  22
+    field :filler_order_number,         seq: 27, type: EI,       length:  22
   end
 end
 
